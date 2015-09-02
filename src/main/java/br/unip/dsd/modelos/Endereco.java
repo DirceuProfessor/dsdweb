@@ -1,18 +1,34 @@
 package br.unip.dsd.modelos;
 
+import javax.persistence.*;
+
 /**
  * Created by dirceu on 8/30/15.
  */
 public class Endereco {
     private Long id;
+
     private String complemento;
+
+    @OneToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.EAGER, orphanRemoval = true)
+    @PrimaryKeyJoinColumn
     private Rua rua;
 
+    @ManyToOne(fetch= FetchType.LAZY)
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
 
-    public Endereco(Long id, String complemento, Rua rua, Estado estado, Cidade cidade, TipoLogradouro tipoLogradouro) {
+    private Estado estado;
+
+    private Cidade cidade;
+
+    private TipoLogradouro tipoLogradouro;
+
+    public Endereco(Long id, String complemento, Rua rua, Usuario usuario, Estado estado, Cidade cidade, TipoLogradouro tipoLogradouro) {
         this.id = id;
         this.complemento = complemento;
         this.rua = rua;
+        this.usuario = usuario;
         this.estado = estado;
         this.cidade = cidade;
         this.tipoLogradouro = tipoLogradouro;
@@ -66,6 +82,14 @@ public class Endereco {
         this.tipoLogradouro = tipoLogradouro;
     }
 
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -81,6 +105,7 @@ public class Endereco {
         if (rua != null ? !rua.equals(endereco.rua) : endereco.rua != null) return false;
         if (tipoLogradouro != null ? !tipoLogradouro.equals(endereco.tipoLogradouro) : endereco.tipoLogradouro != null)
             return false;
+        if (usuario != null ? !usuario.equals(endereco.usuario) : endereco.usuario != null) return false;
 
         return true;
     }
@@ -90,14 +115,11 @@ public class Endereco {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (complemento != null ? complemento.hashCode() : 0);
         result = 31 * result + (rua != null ? rua.hashCode() : 0);
+        result = 31 * result + (usuario != null ? usuario.hashCode() : 0);
         result = 31 * result + (estado != null ? estado.hashCode() : 0);
         result = 31 * result + (cidade != null ? cidade.hashCode() : 0);
         result = 31 * result + (tipoLogradouro != null ? tipoLogradouro.hashCode() : 0);
         return result;
     }
-
-    private Estado estado;
-    private Cidade cidade;
-    private TipoLogradouro tipoLogradouro;
 
 }
