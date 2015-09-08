@@ -1,11 +1,19 @@
 package br.unip.dsd.modelos;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 /**
  * Created by dirceu on 8/30/15.
  */
+@Entity
 public class Rua {
+    @Id
     private Long id;
     private String nome;
+
+    public Rua() {
+    }
 
     public Rua(Long id, String nome) {
         this.id = id;

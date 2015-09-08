@@ -1,11 +1,19 @@
 package br.unip.dsd.modelos;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 /**
  * Created by dirceu on 8/30/15.
  */
+@Entity
 public class TipoLogradouro {
+    @Id
     private Long id;
     private String nome;
+
+    public TipoLogradouro() {
+    }
 
     public TipoLogradouro(Long id, String nome) {
 

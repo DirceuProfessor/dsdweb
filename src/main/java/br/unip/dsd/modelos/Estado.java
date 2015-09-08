@@ -1,12 +1,20 @@
 package br.unip.dsd.modelos;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 /**
  * Created by dirceu on 8/30/15.
  */
+@Entity
 public class Estado {
+    @Id
     private Long id;
     private String nome;
     private String sigla;
+
+    public Estado() {
+    }
 
     public Estado(Long id, String nome, String sigla) {
         this.id = id;

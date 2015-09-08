@@ -2,8 +2,11 @@ package br.unip.dsd.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -11,10 +14,15 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
 import java.util.Properties;
+import javax.sql.DataSource;
+import javax.persistence.EntityManagerFactory;
+//import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 /**
  * Created by dirceu on 8/30/15.
@@ -22,8 +30,25 @@ import java.util.Properties;
 @Configuration
 @EnableJpaRepositories("br.unip.dsd.repositorios")
 @EnableTransactionManagement
-public class JPAConfig {
+@ComponentScan(basePackages = {"br.unip.dsd.modelos", "br.unip.dsd.controller"})
+@EnableWebMvc
+@PropertySource("classpath:application.properties")
+public class JPAConfig extends WebMvcConfigurerAdapter {
 
+    @Override
+    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+        configurer.enable();
+    }
+
+    @Bean
+    public InternalResourceViewResolver internalResourceViewResolver() {
+        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
+        resolver.setPrefix("/WEB-INF/jsp/");
+        resolver.setSuffix(".jsp");
+
+
+        return resolver;
+    }
 
     @Bean
     JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
@@ -34,6 +59,7 @@ public class JPAConfig {
 
     @Bean(destroyMethod = "close")
     DataSource dataSource(Environment env) {
+
         HikariConfig dataSourceConfig = new HikariConfig();
         dataSourceConfig.setDriverClassName(env.getRequiredProperty("db.driver"));
         dataSourceConfig.setJdbcUrl(env.getRequiredProperty("db.url"));
@@ -43,13 +69,16 @@ public class JPAConfig {
         return new HikariDataSource(dataSourceConfig);
     }
 
+    @Autowired
+    private Environment env;
+
     @Bean
     LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource,
                                                                 Environment env) {
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setDataSource(dataSource);
         entityManagerFactoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-        entityManagerFactoryBean.setPackagesToScan("br.unip.dsd");
+        entityManagerFactoryBean.setPackagesToScan("br.unip.dsd","br.unip.dsd.modelos");
 
         Properties jpaProperties = new Properties();
 

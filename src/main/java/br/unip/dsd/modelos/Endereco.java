@@ -5,7 +5,9 @@ import javax.persistence.*;
 /**
  * Created by dirceu on 8/30/15.
  */
+@Entity
 public class Endereco {
+    @Id
     private Long id;
 
     private String complemento;
@@ -18,11 +20,21 @@ public class Endereco {
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
+    @OneToOne(fetch= FetchType.LAZY)
+    @JoinColumn(name = "id")
     private Estado estado;
 
+    @OneToOne(fetch= FetchType.LAZY)
+    @JoinColumn(name = "id")
     private Cidade cidade;
 
+    @OneToOne(fetch= FetchType.LAZY)
+    @JoinColumn(name = "id")
     private TipoLogradouro tipoLogradouro;
+
+    public Endereco(){
+
+    }
 
     public Endereco(Long id, String complemento, Rua rua, Usuario usuario, Estado estado, Cidade cidade, TipoLogradouro tipoLogradouro) {
         this.id = id;

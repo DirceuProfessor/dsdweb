@@ -1,26 +1,30 @@
 package br.unip.dsd.modelos;
 
 
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.Collections;
 import java.util.List;
+import java.io.Serializable;
 
 /**
  * Created by dirceu on 8/30/15.
  */
-public class Usuario {
+@Entity
+public class Usuario implements Serializable{
 
+    @Id
+    @Column(name="usuario_id")
     private Long id;
-    private String name;
+    private String nome;
 
     @OneToMany(fetch= FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="usuario")
     public List<Endereco> endereco = Collections.<Endereco>emptyList();
 
-    public Usuario(Long id, String name) {
+    public Usuario() {
+    }
+        public Usuario(Long id, String nome) {
         this.id = id;
-        this.name = name;
+        this.nome = nome;
 
     }
 
@@ -32,12 +36,12 @@ public class Usuario {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getNome() {
+        return nome;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public List<Endereco> getEndereco() {
@@ -57,7 +61,7 @@ public class Usuario {
 
         if (endereco != null ? !endereco.equals(usuario.endereco) : usuario.endereco != null) return false;
         if (id != null ? !id.equals(usuario.id) : usuario.id != null) return false;
-        if (name != null ? !name.equals(usuario.name) : usuario.name != null) return false;
+        if (nome != null ? !nome.equals(usuario.nome) : usuario.nome != null) return false;
 
         return true;
     }
@@ -65,7 +69,7 @@ public class Usuario {
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (nome != null ? nome.hashCode() : 0);
         result = 31 * result + (endereco != null ? endereco.hashCode() : 0);
         return result;
     }

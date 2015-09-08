@@ -12,6 +12,9 @@ public class Cidade {
     private Long id;
     private String nome;
 
+    public Cidade() {
+    }
+
     public Cidade(Long id, String nome) {
         this.id = id;
         this.nome = nome;
